@@ -17,11 +17,13 @@ soup = BeautifulSoup(page.content, "html.parser")
 
 results = soup.find_all('div', class_='cruise-teaser')
 
+foundItems = 0
+
 for i in results:
     range = i.find('div', class_='dates')
     tmp = range.text
     dates = tmp.split(' bis ')
-    start = datetime.strptime('01.08.2022', '%d.%m.%Y')
+    start = datetime.strptime('01.09.2022', '%d.%m.%Y')
     end = datetime.strptime('30.09.2022', '%d.%m.%Y')
 
     datetimeStart = datetime.strptime(dates[0], '%d.%m.%Y')
@@ -30,6 +32,7 @@ for i in results:
     accaptable = start <= datetimeStart and end >= datetimeEnd
 
     if accaptable:
+        foundItems += 1
         header = i.find('div', class_='moreInfo')
         name = i.find('p', class_='name')
         date = i.find('div', class_='dates')
@@ -39,3 +42,6 @@ for i in results:
 
         print(header.text, name.text, date.text,
               price.text, AIDA_BASE_URL + link['href'], sep=' - ')
+
+if foundItems == 0:
+    print('Kein Aidai Last Minute Urlaub gefunden für September')
